@@ -39,6 +39,15 @@
                         <span class="nav-title">USSD Logs Data</span>
                     </a>
                 </li>
+
+                <li>
+                    <a href="price.php">
+                        <span class="has-icon">
+                            <i class="icon-list"></i>
+                        </span>
+                        <span class="nav-title">Price List</span>
+                    </a>
+                </li>
                 
             </ul>
             <!-- END: side-nav-content -->

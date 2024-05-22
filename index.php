@@ -63,6 +63,7 @@ $branches = $branchData->getBranches();
                                                     <th scope="col">Contact</th>
                                                     <th scope="col">County</th>
                                                     <th scope="col">Sub_county</th>
+                                                    <th scope="col">Region</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
@@ -77,6 +78,7 @@ $branches = $branchData->getBranches();
                                                         <td><?= $branch['contact'] ?></td>
                                                         <td><?= $branch['county'] ?></td>
                                                         <td><?= $branch['sub_county'] ?></td>
+                                                        <td><?= $branch['name'] ?></td>
                                                         <td>
                                                             <a href="view-branch.php?id=<?php echo  $branch['id']; ?>" class="btn btn-success btn-sm"> view</a>
                                                         </td>
