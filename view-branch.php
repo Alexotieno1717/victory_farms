@@ -49,7 +49,7 @@ if (isset($_GET['id'])) {
                     </div>
                     <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
                         <div class="card">
-                            <div class="card-header"><a href="price.php" class="text-info">Pricing List for: <?= htmlspecialchars($branch['county']) ?></a></div>
+                            <div class="card-header"><a href="price.php" class="text-info">Pricing List for: <?= htmlspecialchars($branch['name']) ?></a></div>
                             <div class="card-body">
                                 <div>
                                     <table class="table">
