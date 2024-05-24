@@ -80,6 +80,12 @@ class Branches extends Database{
         return $pricing;
     }
 
+    public function getRegions() {
+        $sql = "SELECT id, name FROM regions";
+
+        return $this->all_rows($sql);
+    }
+
 
 }
 

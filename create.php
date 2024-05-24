@@ -79,7 +79,7 @@ require './partials/head.php'
                                     </div>
 
                                     <div class="form-group">
-                                        <label>county</label>
+                                        <label>county:</label>
                                         <select class="form-control"
                                                 name="county"
                                                 required
@@ -87,10 +87,20 @@ require './partials/head.php'
                                             <option selected disabled></option>
                                             <?php
                                             foreach ($counties as $county) : ?>
-                                                <option value="<?= $county['name'] ?>"><?= $county['name'] ?></option>
+                                                <option value="<?= $county['id'] ?>"><?= $county['name'] ?></option>
 
                                             <?php
                                             endforeach; ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Region:</label>
+                                        <select class="form-control"
+                                                name="Select your region"
+                                                required
+                                        >
+                                            <option selected disabled></option>
                                         </select>
                                     </div>
 

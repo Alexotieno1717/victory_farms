@@ -35,6 +35,15 @@ if (isset($_GET['id'])) {
                                     <p>Sub_county : <?= htmlspecialchars($branch['sub_county']) ?></p>
                                     <p>Region Name : <?= htmlspecialchars($branch['name']) ?></p>
                                 </div>
+
+                                <div class="d-flex mt-5">
+                                    <div>
+                                        <a href="edit-branch.php?id=<?= $branch['id'] ?>" class="btn btn-dark btn-sm mr-3">Edit Branch</a>
+                                    </div>
+                                    <div>
+                                        <a href="delete-branch.php?id=<?= $branch['id'] ?>" class="btn btn-danger btn-sm">Delete Branch</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -60,16 +69,6 @@ if (isset($_GET['id'])) {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                        <div class="d-flex mt-3 pl-3">
-                            <div>
-                                <a href="edit-branch.php?id=<?= $branch['id'] ?>" class="btn btn-dark btn-sm mr-3">Edit Branch</a>
-                            </div>
-                            <div>
-                                <a href="delete-branch.php?id=<?= $branch['id'] ?>" class="btn btn-danger btn-sm">Delete Branch</a>
                             </div>
                         </div>
                     </div>
