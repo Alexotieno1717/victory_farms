@@ -5,6 +5,9 @@ include_once 'Core/Branches.php';
 
 $branches = new Branches();
 
+// Fetch regions from the database
+$regions = $branches->getRegions();
+
 // Calling the json data
 $jsonData = file_get_contents('counties.json');
 $counties = json_decode($jsonData, true);
@@ -20,8 +23,9 @@ if (isset($_POST['createBranch'])) {
     $contact = $_POST['contact'];
     $county = $_POST['county'];
     $sub_county = $_POST['sub_county'];
+    $region_id = $_POST['region_id'];
 
-    $branches->createBranches($branch, $contact, $county, $sub_county);
+    $branches->createBranches($branch, $contact, $county, $sub_county, $region_id);
 
     header('location: index.php');
     die();
@@ -75,11 +79,11 @@ require './partials/head.php'
 
                                     <div class="form-group">
                                         <lable>Contact:</lable>
-                                        <input type="text" name="contact" class="form-control" placeholder="Contact Number" required />
+                                        <input type="number" name="contact" class="form-control" placeholder="Contact Number" required />
                                     </div>
 
                                     <div class="form-group">
-                                        <label>county:</label>
+                                        <label>county</label>
                                         <select class="form-control"
                                                 name="county"
                                                 required
@@ -87,7 +91,7 @@ require './partials/head.php'
                                             <option selected disabled></option>
                                             <?php
                                             foreach ($counties as $county) : ?>
-                                                <option value="<?= $county['id'] ?>"><?= $county['name'] ?></option>
+                                                <option value="<?= $county['name'] ?>"><?= $county['name'] ?></option>
 
                                             <?php
                                             endforeach; ?>
@@ -96,11 +100,11 @@ require './partials/head.php'
 
                                     <div class="form-group">
                                         <label>Region:</label>
-                                        <select class="form-control"
-                                                name="Select your region"
-                                                required
-                                        >
+                                        <select class="form-control" name="region_id" required>
                                             <option selected disabled></option>
+                                            <?php foreach ($regions as $region) : ?>
+                                                <option value="<?= $region['id'] ?>"><?= $region['name'] ?></option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
 

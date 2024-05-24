@@ -32,10 +32,10 @@ class Branches extends Database{
     /**
      * @throws Exception
      */
-    public function createBranches($branch, $contact, $county, $sub_county)
+    public function createBranches($branch, $contact, $county, $sub_county, $region_id)
     {
         $sql = /** @lang text */
-            "INSERT INTO branches(branch, contact, county, sub_county) VALUES ('$branch', '$contact', '$county', '$sub_county')";
+            "INSERT INTO branches(branch, contact, county, sub_county, region_id) VALUES ('$branch', '$contact', '$county', '$sub_county', '$region_id')";
         $query = $this->conn1->query($sql);
     }
 
