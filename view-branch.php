@@ -77,7 +77,7 @@ if (isset($_GET['id'])) {
         </div>
     </div>
     <footer class="main-footer fixed-btm">
-        Copyright Victory Farm @2023.
+    <?php echo "Copyright Victory Farms @" . date('Y'); ?>
     </footer>
 </div>
 

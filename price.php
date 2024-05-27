@@ -95,7 +95,7 @@ require './partials/head.php'
     <!-- END: .app-container -->
     <!-- BEGIN .main-footer -->
     <footer class="main-footer fixed-btm">
-        Copyright Victory Farm @2023.
+    <?php echo "Copyright Victory Farm @" . date('Y'); ?>
     </footer>
     <!-- END: .main-footer -->
 </div>
