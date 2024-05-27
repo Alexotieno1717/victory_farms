@@ -6,6 +6,11 @@ include_once 'Core/Branches.php';
 
 $branches = new Branches();
 
+// Fetch regions from the database
+$regions = $branches->getRegions();
+
+// Fetch regions from the database
+
 // Calling the json data
 $jsonData = file_get_contents('counties.json');
 $counties = json_decode($jsonData, true);
@@ -18,6 +23,7 @@ usort($counties, function ($a, $b) {
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $branch = $branches->getBranch($id);
+
 //    var_dump($branch);
 };
 
@@ -27,13 +33,28 @@ if (isset($_POST['updateBranch'])) {
     $contact = $_POST['contact'];
     $county = $_POST['county'];
     $sub_county = $_POST['sub_county'];
+    $region_id = $_POST['region_id'];
 
-
-    $branches->updateBranches($id, $branch, $contact, $county, $sub_county);
+    $branches->updateBranches($id, $branch, $contact, $county, $sub_county, $region_id);
 
     header('location: index.php');
     die();
 }
+
+//if (isset($_POST['updateBranch'])) {
+//    $id = $_POST['id'];
+//    $branch = $_POST['branch'];
+//    $contact = $_POST['contact'];
+//    $county = $_POST['county'];
+//    $sub_county = $_POST['sub_county'];
+//    $region_id = $_POST['region_id'];
+//
+//
+//    $branches->updateBranches($id, $branch, $contact, $county, $sub_county, $region_id);
+//
+//    header('location: index.php');
+//    die();
+//}
 
 ?>
 
@@ -124,6 +145,19 @@ require './partials/head.php'
                                                     </option>
                                                 <?php endforeach; ?>
                                             </select>
+                                    </div>
+
+                                    <!-- Region input -->
+                                    <div class="form-group">
+                                        <label>Region:</label>
+                                        <select class="form-control" name="region_id" required>
+                                            <option selected disabled></option>
+                                            <?php foreach ($regions as $region) : ?>
+                                                <option value="<?= htmlspecialchars($region['id']) ?>" <?= ($region['id'] == $branch['region_id']) ? 'selected' : '' ?>>
+                                                    <?= htmlspecialchars($region['name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
 
                                     <!-- Sub-county input -->

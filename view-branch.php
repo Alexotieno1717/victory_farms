@@ -6,8 +6,10 @@ include_once 'Core/Branches.php';
 $branches = new Branches();
 
 if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+    $id = (int)$_GET['id'];
     $branch = $branches->getBranch($id);
+//    var_dump($id);
+//    var_dump($branch);
     $pricing = $branches->getPricingByBranch($id);
 }
 
@@ -29,6 +31,7 @@ if (isset($_GET['id'])) {
                             <div class="card-header"><a href="index.php" class="text-info">Go Branches Lists</a></div>
                             <div class="card-body">
                                 <div>
+<!--                                    <h4>Branch : --><?php //= htmlspecialchars($branch['id']) ?><!--</h4>-->
                                     <h4>Branch : <?= htmlspecialchars($branch['branch']) ?></h4>
                                     <h6>Contact : <?= htmlspecialchars($branch['contact']) ?></h6>
                                     <h6>County : <?= htmlspecialchars($branch['county']) ?></h6>
