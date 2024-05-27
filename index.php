@@ -78,9 +78,9 @@ $branches = $branchData->getBranches();
                                                         <td><?= $branch['contact'] ?></td>
                                                         <td><?= $branch['county'] ?></td>
                                                         <td><?= $branch['sub_county'] ?></td>
-                                                        <td><?= $branch['name'] ?></td>
+                                                        <td><?= $branch['region_name'] ?></td>
                                                         <td>
-                                                            <a href="view-branch.php?id=<?php echo  $branch['id']; ?>" class="btn btn-success btn-sm"> view</a>
+                                                            <a href="view-branch.php?id=<?php echo  (int)$branch['id']; ?>" class="btn btn-success btn-sm"> view</a>
                                                         </td>
                                                     </tr>
 
