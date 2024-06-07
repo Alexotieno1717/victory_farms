@@ -67,6 +67,9 @@ if (isset($_GET['id'])) {
                                             <tr>
                                                 <td><?= htmlspecialchars($price['size']) ?></td>
                                                 <td><?= htmlspecialchars($price['new_price']) ?></td>
+                                                <td>
+                                                    <a href="edit-price.php?id=<?php echo  (int)$price['id']; ?>" class="btn btn-success btn-sm"> Edit Price</a>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                         </tbody>
