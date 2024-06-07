@@ -11,7 +11,8 @@ class Branches extends Database{
     public function getBranches()
     {
         // SQL query to select all branches along with their corresponding region information
-        $query = "
+        $query = /** @lang text */
+            "
         SELECT 
             b.*, 
             r.name as region_name 
@@ -28,16 +29,10 @@ class Branches extends Database{
     }
 
 
-//    public function getBranches()
-//    {
-//        $query = "SELECT * FROM branches b Left JOIN regions r ON b.region_id=r.id ORDER BY b.id DESC";
-//        return $this->all_rows($query);
-//    }
-
     public function getBranch($id)
     {
-//        $sql = "select * from branches where id = '$id'";
-        $sql = "select b.id, b.branch,b.contact,b.county,b.sub_county,p.size,p.new_price,r.name from branches b LEFT JOIN prices p ON p.region_id=b.id LEFT JOIN regions r ON r.id=b.region_id  where b.id='$id'";
+        $sql = /** @lang text */
+            "select b.id, b.branch,b.contact,b.county,b.sub_county,p.size,p.new_price,r.name from branches b LEFT JOIN prices p ON p.region_id=b.id LEFT JOIN regions r ON r.id=b.region_id  where b.id='$id'";
         $query = $this->conn1->query($sql);
         return $query->fetch_all(MYSQLI_ASSOC)[0];
     }
@@ -61,25 +56,22 @@ class Branches extends Database{
 
     public function updateBranches($id, $branch, $contact, $county, $sub_county, $region_id)
     {
-        $sql = "UPDATE branches SET branch = '$branch', contact = '$contact', county = '$county', sub_county = '$sub_county', region_id='$region_id' where id = '$id'";
+        $sql = /** @lang text */
+            "UPDATE branches SET branch = '$branch', contact = '$contact', county = '$county', sub_county = '$sub_county', region_id='$region_id' where id = '$id'";
         return $this->conn1->query($sql);
     }
 
     public function deleteBranch($id)
     {
-        $sql = "DELETE FROM branches WHERE id = '$id'";
+        $sql = /** @lang text */
+            "DELETE FROM branches WHERE id = '$id'";
         $query = $this->conn1->query($sql);
     }
 
     public function getPriceList()
     {
-//        $query = /** @lang text */
-//            "SELECT prices.id, regions.name AS region_name, prices.size, prices.current_price, prices.new_price, prices.inserted_at, prices.updated_at
-//            FROM prices
-//            JOIN regions ON prices.region_id = regions.id
-//            ORDER BY regions.name ASC";
-
-        $query = "SELECT prices.id, regions.name AS region_name, prices.size, prices.current_price, prices.new_price, prices.inserted_at, prices.updated_at
+        $query = /** @lang text */
+            "SELECT prices.id, regions.name AS region_name, prices.size, prices.new_price, prices.inserted_at, prices.updated_at
             FROM prices
             JOIN regions ON prices.region_id = regions.id
             ORDER BY regions.name ASC";
@@ -87,7 +79,8 @@ class Branches extends Database{
     }
 
     public function getPricingByBranch($branchId) {
-        $sql = "SELECT p.size, p.new_price 
+        $sql = /** @lang text */
+            "SELECT p.id, p.size, p.new_price 
                 FROM prices p 
                 JOIN branches b ON p.region_id = b.region_id 
                 WHERE b.id = ?";
@@ -100,6 +93,37 @@ class Branches extends Database{
         return $pricing;
     }
 
+//    public function getPriceById($id)
+//    {
+//        $sql = /** @lang text */
+//            "SELECT p.*, b.id AS branch_id FROM prices p
+//            JOIN branches b ON p.region_id = b.region_id
+//            WHERE id='$id'";
+//        $query = $this->conn1->query($sql);
+//        return $query->fetch_all(MYSQLI_ASSOC)[0];
+//    }
+
+    public function getPriceById($id)
+    {
+        $sql = /** @lang text */
+            "SELECT p.*, b.id AS branch_id FROM prices p
+        JOIN branches b ON p.region_id = b.region_id
+        WHERE p.id = ?";
+        $stmt = $this->conn1->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
+
+    public function updatePriceById($id, $new_price) {
+        // Update the price based on the ID.
+        $sql = /** @lang text */
+            "UPDATE prices SET new_price = '$new_price' where id = '$id'";
+        return $this->conn1->query($sql);
+    }
+
     public function getRegions() {
         $sql = /** @lang text */
             "SELECT id, name FROM regions";
@@ -109,35 +133,3 @@ class Branches extends Database{
 
 
 }
-
-//select b.id, b.branch,b.contact,b.county,b.sub_county,p.size,p.new_price,r.name from branches b FULL JOIN prices p ON p.region_id=b.id FULL JOIN regions r ON r.id=b.region_id  where b.id='$id'
-
-
-
-//i have an issue when view data by id  below id my db
-//
-//MariaDB [victory_farms]> select * from branches;
-//+----+-----------------------+----------------+--------+------------+-----------+
-//| id | branch                | contact        | county | sub_county | region_id |
-//+----+-----------------------+----------------+--------+------------+-----------+
-//|  3 | Fishing Farms Limited | 0748815593     |        | Kibera     |         1 |
-//|  4 | Tek Fishin Farm       | 0748815593     |        | Dagoretti  |         3 |
-//|  6 | Tek Fishin Farm       | 0748815593     |        | Kibera     |         4 |
-//|  7 | Fishing Farms Limited | 0748815593     |        | Dagoretti  |         3 |
-//|  8 | Fishing Farms Limited | 0748815593     |        | Kibera     |         5 |
-//|  9 | Fishing Farms Limited | 0748815593     |        | Kibera     |         5 |
-//| 10 | Fishing Farms Limited | 0748815593     |        | Kibera     |         5 |
-//| 11 | Fishing Farms Limited | 0748815593     |        | Kibera     |         5 |
-//| 12 | Fishing Farms Limited | 0748815593     |        | Kibera     |         5 |
-//| 13 | Fishing Farms Limited | 0748815593     |        | Kibera     |         5 |
-//| 15 | Fishing Farms Limited | 07488155932222 | Kilifi | Dagoretti  |         2 |
-//+----+-----------------------+----------------+--------+------------+-----------+
-//
-//when i want to access the branch is instead in the query it pick region id. below is my query
-//
-//  public function getBranch($id)
-//{
-//    $sql = "select b.id, b.branch,b.contact,b.county,b.sub_county,p.size,p.new_price,r.name from branches b LEFT JOIN prices p ON p.region_id=b.id LEFT JOIN regions r ON r.id=b.region_id  where b.id='$id'";
-//    $query = $this->conn1->query($sql);
-//    return $query->fetch_all(MYSQLI_ASSOC)[0];
-//}

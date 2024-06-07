@@ -41,21 +41,6 @@ if (isset($_POST['updateBranch'])) {
     die();
 }
 
-//if (isset($_POST['updateBranch'])) {
-//    $id = $_POST['id'];
-//    $branch = $_POST['branch'];
-//    $contact = $_POST['contact'];
-//    $county = $_POST['county'];
-//    $sub_county = $_POST['sub_county'];
-//    $region_id = $_POST['region_id'];
-//
-//
-//    $branches->updateBranches($id, $branch, $contact, $county, $sub_county, $region_id);
-//
-//    header('location: index.php');
-//    die();
-//}
-
 ?>
 
 
