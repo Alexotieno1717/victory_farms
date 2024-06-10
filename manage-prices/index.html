@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        .header {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .upload-container {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-container:hover {
+            background-color: #f0f0f0;
+        }
+        .hidden {
+            display: none;
+        }
+        .filters {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .filters label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .filters select, .filters button {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .filters select:focus, .filters button:focus {
+            outline: none;
+            border-color: #666;
+        }
+        .filters button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        .filters button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">Upload Price List to Manage All Prices</div>
+
+<form id="upload-form" action="upload.php" method="POST" enctype="multipart/form-data">
+    <div class="upload-container" id="upload-container">
+        Drag & Drop your CSV file here or Click to Upload
+        <input type="file" id="file-input" class="hidden" name="csv_file" accept=".csv">
+    </div>
+    <div class="filters">
+        <label for="region-filter">Filter by Region:</label>
+        <select id="region-filter" name="region">
+            <option value="">All</option>
+        </select>
+
+        <label for="size-filter">Filter by Size:</label>
+        <select id="size-filter" name="size">
+            <option value="">All</option>
+        </select>
+
+        <button type="submit" id="submit-button">Submit</button>
+    </div>
+</form>
+
+<div id="csv-table"></div>
+
+<script>
+    const uploadContainer = document.getElementById('upload-container');
+    const fileInput = document.getElementById('file-input');
+    const csvTable = document.getElementById('csv-table');
+    const regionFilter = document.getElementById('region-filter');
+    const sizeFilter = document.getElementById('size-filter');
+    let csvDataArray = [];
+
+    uploadContainer.addEventListener('click', () => fileInput.click());
+
+    uploadContainer.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        uploadContainer.style.backgroundColor = '#f0f0f0';
+    });
+
+    uploadContainer.addEventListener('dragleave', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        uploadContainer.style.backgroundColor = '#fff';
+    });
+
+    uploadContainer.addEventListener('drop', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        uploadContainer.style.backgroundColor = '#fff';
+        fileInput.files = event.dataTransfer.files;
+        handleFileUpload();
+    });
+
+    fileInput.addEventListener('change', handleFileUpload);
+
+    function handleFileUpload() {
+        const file = fileInput.files[0];
+        if (file && file.type === 'text/csv') {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const csvData = event.target.result;
+                csvDataArray = csvToArray(csvData);
+                populateFilters(csvDataArray);
+                displayTable(csvDataArray);
+            };
+            reader.readAsText(file);
+        } else {
+            alert('Please upload a valid CSV file.');
+        }
+    }
+
+    function csvToArray(str, delimiter = ",") {
+        const headers = str.slice(0, str.indexOf("\n")).trim().split(delimiter);
+        const rows = str.slice(str.indexOf("\n") + 1).trim().split("\n");
+
+        return rows.map(row => {
+            const values = row.split(delimiter);
+            return headers.reduce((object, header, index) => {
+                object[header.trim()] = values[index].trim();
+                return object;
+            }, {});
+        });
+    }
+
+    function populateFilters(data) {
+        const regions = new Set();
+        const sizes = new Set();
+
+        data.forEach(row => {
+            regions.add(row.Region);
+            sizes.add(row.Size);
+        });
+
+        updateFilterOptions(regionFilter, regions);
+        updateFilterOptions(sizeFilter, sizes);
+    }
+
+    function updateFilterOptions(filterElement, options) {
+        filterElement.innerHTML = '<option value="">All</option>';
+        options.forEach(option => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option;
+            optionElement.textContent = option;
+            filterElement.appendChild(optionElement);
+        });
+    }
+
+    function displayTable(data) {
+        let html = '<table><thead><tr><th>Region</th><th>Size</th><th>Price</th></tr></thead><tbody>';
+        data.forEach(row => {
+            html += `<tr><td>${row.Region}</td><td>${row.Size}</td><td>${row.Price}</td></tr>`;
+        });
+        html += '</tbody></table>';
+        csvTable.innerHTML = html;
+    }
+</script>
+
+</body>
+</html>

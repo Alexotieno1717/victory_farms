@@ -1,0 +1,4 @@
+manage-prices/uploads/*.csv
+victory
+*.sql
+Core/Database.php
