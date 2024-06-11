@@ -19,6 +19,14 @@
             text-align: center;
             cursor: pointer;
             transition: background-color 0.3s;
+
+            width: 100%; /* Increased width */
+            margin: 0 auto; /* Centered the container */
+            height: 150px; /* Doubled the height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px; /* Increased font size for better readability */
         }
         .upload-container:hover {
             background-color: #f0f0f0;
@@ -71,7 +79,7 @@
 </head>
 <body>
 
-<div class="header"><a href="/price.php">Back to Prices</a></div>
+<div class="header"><a href="../price.php">Back to Prices</a></div>
 <div class="header">Upload Price List to Manage All Prices</div>
 
 <form id="upload-form" action="upload.php" method="POST" enctype="multipart/form-data">

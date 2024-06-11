@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 ini_set('display_errors', 1);
@@ -58,10 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
         $message = "There was an error uploading the file.";
     }
 
-    header('Location: /price.php?message=' . urlencode($message));
+    header('Location: ../price.php?message=' . urlencode($message));
     exit;
 }
 
-header('Location: /price.php');
+header('Location: ../price.php');
 exit;
 ?>
