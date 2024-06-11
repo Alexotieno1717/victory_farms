@@ -8,14 +8,12 @@ error_reporting(E_ALL);
 
 include_once __DIR__ . '/../Core/Branches.php';
 
-//include_once 'Core/Branches.php';
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
     $file = $_FILES['csv_file'];
 
     // Check if the file is a valid CSV
     if ($file['type'] !== 'text/csv') {
-        echo "Please upload a valid CSV file.";
+        header('Location: /price.php?message=' . urlencode("Please upload a valid CSV file."));
         exit;
     }
 
@@ -32,8 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
 
     // Move the uploaded file to the new location
     if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
-        echo "File successfully uploaded as $newFilename.<br>";
-        echo "Extracting $newFilename.<br>";
+        $message = "File successfully uploaded as $newFilename.";
 
         if (($handle = fopen($uploadFile, "r")) !== FALSE) {
             $header = fgetcsv($handle, 1000, ","); // Assumes the first row is the header
@@ -52,12 +49,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                 $csvHandler->updateAllPricesByRegion($regionName, $size, $newPrice);
             }
             fclose($handle);
+            $message .= " Prices have been updated.";
+        } else {
+            $message .= " There was an error extracting the file.";
         }
 
     } else {
-        echo "There was an error uploading the file.";
+        $message = "There was an error uploading the file.";
     }
+
+    header('Location: /price.php?message=' . urlencode($message));
+    exit;
 }
 
-header('Location: price.php');
-die();
+header('Location: /price.php');
+exit;
+?>

@@ -6,12 +6,21 @@ include_once 'Core/Branches.php';
 
 $branchData = new Branches();
 $branches = $branchData->getPriceList();
+$message = isset($_GET['message']) ? urldecode($_GET['message']) : '';
 
 //var_dump($branches);
 ?>
 
 <!doctype html>
 <html lang="en">
+<script type="text/javascript">
+    window.onload = function() {
+        var message = "<?php echo addslashes($message); ?>";
+        if (message) {
+            alert(message);
+        }
+    };
+</script>
 
 <?php
 require './partials/head.php'
