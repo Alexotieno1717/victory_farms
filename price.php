@@ -53,7 +53,16 @@ require './partials/head.php'
                 <div class="row gutters">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                         <div class="card">
-                            <div class="card-header"><b>Victory Farm Regional Pricing List</b></div>
+                            <div class="card-header mb-4">
+                                <div class="row">
+                                    <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
+                                        <div><b>Victory Farm Regional Pricing List</b></div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a href="manage-prices/index.html" class="btn btn-success float-right">Manage Prices</a>
+                                    </div>
+                                </div>
+                            </div>
 
                             <table id="basicExample" class="table table-striped table-bordered">
                                 <thead>
@@ -61,7 +70,7 @@ require './partials/head.php'
                                     <th scope="col">Size</th>
                                     <th scope="col">Region</th>
                                     <th scope="col">new_price</th>
-                                    <th scope="col">Action</th>
+<!--                                    <th scope="col">Action</th>-->
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -73,9 +82,9 @@ require './partials/head.php'
                                         <td><?= $branch['size'] ?></td>
                                         <td><?= $branch['region_name'] ?></td>
                                         <td><?= $branch['new_price'] ?></td>
-                                        <td>
-                                            <a href="view-branch.php?id=<?php echo  $branch['id']; ?>" class="btn btn-success btn-sm"> view</a>
-                                        </td>
+<!--                                        <td>-->
+<!--                                            <a href="view-branch.php?id=--><?php //echo  $branch['id']; ?><!--" class="btn btn-success btn-sm"> view</a>-->
+<!--                                        </td>-->
                                     </tr>
 
                                     <?php $pos++;

@@ -134,7 +134,7 @@ class Branches extends Database{
 
     public function updateAllPricesByRegion( $regionName, $size, $newPrice){
         $sql = "SELECT id FROM regions WHERE name = ?";
-        $stmt = $conn->prepare($sql);
+        $stmt = $this->conn1->prepare($sql);
         $stmt->bind_param("s", $regionName);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -144,7 +144,7 @@ class Branches extends Database{
 
             // Update price
             $sql = "UPDATE prices SET new_price = ? WHERE region_id = ? AND size = ?";
-            $stmt = $conn->prepare($sql);
+            $stmt = $this->conn1->prepare($sql);
             $stmt->bind_param("dii", $newPrice, $regionId, $size);
             $stmt->execute();
         }

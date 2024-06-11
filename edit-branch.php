@@ -37,7 +37,7 @@ if (isset($_POST['updateBranch'])) {
 
     $branches->updateBranches($id, $branch, $contact, $county, $sub_county, $region_id);
 
-    header('location: index.php');
+    header('location: index.html');
     die();
 }
 
