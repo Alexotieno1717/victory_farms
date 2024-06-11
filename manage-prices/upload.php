@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
 
     // Check if the file is a valid CSV
     if ($file['type'] !== 'text/csv') {
-        header('Location: /price.php?message=' . urlencode("Please upload a valid CSV file."));
+        header('Location: /price.php?status=error&message=' . urlencode("Please upload a valid CSV file."));
         exit;
     }
 
@@ -22,14 +22,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
     $uploadDir = 'uploads/';
     $uploadFile = $uploadDir . $newFilename;
 
+
     // Create the uploads directory if it doesn't exist
     if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
+        if (!mkdir($uploadDir, 0777, true)) {
+            die('Failed to create upload directory');
+        } else {
+            // Change permissions in case mkdir doesn't set it as expected
+            chmod($uploadDir, 0777);
+        }
     }
+    
 
     // Move the uploaded file to the new location
     if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
         $message = "File successfully uploaded as $newFilename.";
+        $status = 'success';
 
         if (($handle = fopen($uploadFile, "r")) !== FALSE) {
             $header = fgetcsv($handle, 1000, ","); // Assumes the first row is the header
@@ -45,19 +53,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['csv_file'])) {
                 error_log("Updating prices for Region: $regionName, Size: $size, New Price: $newPrice");
 
                 // Update in the DB
-                $csvHandler->updateAllPricesByRegion($regionName, $size, $newPrice);
+                $updateStatus = $csvHandler->updateAllPricesByRegion($regionName, $size, $newPrice);
+
+                if ($updateStatus['code'] !== 'success') {
+                    $message = $updateStatus['message'];
+                    $status = 'error';
+                    break;
+                }
             }
             fclose($handle);
-            $message .= " Prices have been updated.";
+            if ($status === 'success') {
+                $message = $updateStatus['message'];
+            } else{
+                $message = $updateStatus['message'];
+
+            }
         } else {
-            $message .= " There was an error extracting the file.";
+            $message .= " There was an error EXTRACTING the file.";
+            $status = 'error';
         }
 
     } else {
         $message = "There was an error uploading the file.";
+        $status = 'error';
     }
 
-    header('Location: ../price.php?message=' . urlencode($message));
+    header('Location: ../price.php?status=' . $status . '&message=' . urlencode($message));
     exit;
 }
 

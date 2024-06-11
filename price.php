@@ -3,29 +3,24 @@ session_start();
 
 include_once 'Core/Branches.php';
 
-
 $branchData = new Branches();
 $branches = $branchData->getPriceList();
 $message = isset($_GET['message']) ? urldecode($_GET['message']) : '';
-
-//var_dump($branches);
+$status = isset($_GET['status']) ? $_GET['status'] : '';
 ?>
 
 <!doctype html>
 <html lang="en">
-<script type="text/javascript">
-    window.onload = function() {
-        var message = "<?php echo addslashes($message); ?>";
-        if (message) {
-            alert(message);
-        }
-    };
-</script>
+<head>
+    <meta charset="UTF-8">
+    <title>Price Update</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.all.min.js"></script>
 
-<?php
-require './partials/head.php'
-?>
-
+    <?php
+    require './partials/head.php';
+    ?>
+</head>
 <body>
 
 <!-- Loading starts -->
@@ -45,14 +40,14 @@ require './partials/head.php'
 
     <!-- BEGIN .app-container -->
     <?php
-    require './partials/heading.php'
+    require './partials/heading.php';
     ?>
 
     <!-- BEGIN .app-container -->
     <div class="app-container">
 
         <!-- BEGIN .app-side -->
-        <?php require './partials/sidebar.php' ?>
+        <?php require './partials/sidebar.php'; ?>
 
         <!-- BEGIN .app-main -->
         <div class="app-main">
@@ -113,7 +108,7 @@ require './partials/head.php'
     <!-- END: .app-container -->
     <!-- BEGIN .main-footer -->
     <footer class="main-footer fixed-btm">
-    <?php echo "Copyright Victory Farm @" . date('Y'); ?>
+        <?php echo "Copyright Victory Farm @" . date('Y'); ?>
     </footer>
     <!-- END: .main-footer -->
 </div>
@@ -154,6 +149,20 @@ require './partials/head.php'
 <!-- Common JS -->
 <script src="js/common.js"></script>
 
-</body>
+<script type="text/javascript">
+    window.onload = function() {
+        var message = "<?php echo addslashes($message); ?>";
+        var status = "<?php echo addslashes($status); ?>";
 
+        if (message) {
+            Swal.fire({
+                icon: status === 'success' ? 'success' : 'error',
+                title: status === 'success' ? 'Upload Successful' : 'Upload Failed',
+                text: message
+            });
+        }
+    };
+</script>
+
+</body>
 </html>

@@ -132,23 +132,35 @@ class Branches extends Database{
     }
 
 
-    public function updateAllPricesByRegion( $regionName, $size, $newPrice){
+    // public function updateAllPricesByRegion( $regionName, $size, $newPrice){
+    //     $sql = "SELECT id FROM regions WHERE name = ?";
+    //ed
+
+    public function updateAllPricesByRegion($regionName, $size, $newPrice) {
         $sql = "SELECT id FROM regions WHERE name = ?";
         $stmt = $this->conn1->prepare($sql);
         $stmt->bind_param("s", $regionName);
         $stmt->execute();
         $result = $stmt->get_result();
-
+    
         if ($result->num_rows > 0) {
             $regionId = $result->fetch_assoc()['id'];
-
+    
             // Update price
             $sql = "UPDATE prices SET new_price = ? WHERE region_id = ? AND size = ?";
             $stmt = $this->conn1->prepare($sql);
             $stmt->bind_param("dii", $newPrice, $regionId, $size);
-            $stmt->execute();
+            
+            if ($stmt->execute()) {
+                return ['code' => 'success', 'message' => 'Price updated successfully.'];
+            } else {
+                return ['code' => 'failed', 'message' => 'Failed to update price.'];
+            }
+        } else {
+            return ['code' => 'region_not_found', 'message' => 'Region not found.'];
         }
     }
+    
 
 
 }

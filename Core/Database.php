@@ -4,8 +4,9 @@
 class Database {
     private $host = 'localhost'; // For the first database
     private $username = 'root';
-     private $password = 'new_password';
-//    private $password = 'DarthVader-2012';
+    //  private $password = 'new_password';
+    //  private $password = 'root';
+    private $password = 'DarthVader-2012';
     private $database = 'victory_farms';
 
     private $database2 = 'ussdlogs'; // For the second database
