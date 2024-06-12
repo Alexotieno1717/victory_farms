@@ -4,121 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSV Upload</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 50px;
-        }
-        .header {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        .upload-container {
-            border: 2px dashed #ccc;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
-
-            width: 100%; /* Increased width */
-            margin: 0 auto; /* Centered the container */
-            height: 120px; /* Doubled the height */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px; /* Increased font size for better readability */
-        }
-        .upload-container:hover {
-            background-color: #f0f0f0;
-        }
-        .hidden {
-            display: none;
-        }
-        .filters {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        .filters label {
-            margin-right: 10px;
-            font-weight: bold;
-        }
-        .filters select, .filters button {
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .filters select:focus, .filters button:focus {
-            outline: none;
-            border-color: #666;
-        }
-        .filters button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
-        .filters button:hover {
-            background-color: #45a049;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        .header {
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-            display: flex;
-            align-items: center;
-        }
-
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 15px;
-            font-size: 16px;
-            color: #007bff;
-            text-decoration: none;
-            border: 1px solid #007bff;
-            border-radius: 5px;
-            background-color: #fff;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .btn-back:hover {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        .btn-back .fa {
-            margin-right: 8px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- <div class="header"><a href="../price.php">Back to Prices</a></div> -->
 <div class="header">
     <a href="../price.php" class="btn-back">
         <i class="fa fa-arrow-left"></i> Back
     </a>
 </div>
 
-
-
-<!-- Font Awesome for the arrow icon -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="header">Upload Price List to Manage All Prices</div>
@@ -145,99 +40,7 @@
 
 <div id="csv-table"></div>
 
-<script>
-    const uploadContainer = document.getElementById('upload-container');
-    const fileInput = document.getElementById('file-input');
-    const csvTable = document.getElementById('csv-table');
-    const regionFilter = document.getElementById('region-filter');
-    const sizeFilter = document.getElementById('size-filter');
-    let csvDataArray = [];
-
-    uploadContainer.addEventListener('click', () => fileInput.click());
-
-    uploadContainer.addEventListener('dragover', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        uploadContainer.style.backgroundColor = '#f0f0f0';
-    });
-
-    uploadContainer.addEventListener('dragleave', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        uploadContainer.style.backgroundColor = '#fff';
-    });
-
-    uploadContainer.addEventListener('drop', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        uploadContainer.style.backgroundColor = '#fff';
-        fileInput.files = event.dataTransfer.files;
-        handleFileUpload();
-    });
-
-    fileInput.addEventListener('change', handleFileUpload);
-
-    function handleFileUpload() {
-        const file = fileInput.files[0];
-        if (file && file.type === 'text/csv') {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const csvData = event.target.result;
-                csvDataArray = csvToArray(csvData);
-                populateFilters(csvDataArray);
-                displayTable(csvDataArray);
-            };
-            reader.readAsText(file);
-        } else {
-            alert('Please upload a valid CSV file.');
-        }
-    }
-
-    function csvToArray(str, delimiter = ",") {
-        const headers = str.slice(0, str.indexOf("\n")).trim().split(delimiter);
-        const rows = str.slice(str.indexOf("\n") + 1).trim().split("\n");
-
-        return rows.map(row => {
-            const values = row.split(delimiter);
-            return headers.reduce((object, header, index) => {
-                object[header.trim()] = values[index].trim();
-                return object;
-            }, {});
-        });
-    }
-
-    function populateFilters(data) {
-        const regions = new Set();
-        const sizes = new Set();
-
-        data.forEach(row => {
-            regions.add(row.Region);
-            sizes.add(row.Size);
-        });
-
-        updateFilterOptions(regionFilter, regions);
-        updateFilterOptions(sizeFilter, sizes);
-    }
-
-    function updateFilterOptions(filterElement, options) {
-        filterElement.innerHTML = '<option value="">All</option>';
-        options.forEach(option => {
-            const optionElement = document.createElement('option');
-            optionElement.value = option;
-            optionElement.textContent = option;
-            filterElement.appendChild(optionElement);
-        });
-    }
-
-    function displayTable(data) {
-        let html = '<table><thead><tr><th>Region</th><th>Size</th><th>Price</th></tr></thead><tbody>';
-        data.forEach(row => {
-            html += `<tr><td>${row.Region}</td><td>${row.Size}</td><td>${row.Price}</td></tr>`;
-        });
-        html += '</tbody></table>';
-        csvTable.innerHTML = html;
-    }
-</script>
+<script src="scripts.js"></script>
 
 </body>
 </html>
